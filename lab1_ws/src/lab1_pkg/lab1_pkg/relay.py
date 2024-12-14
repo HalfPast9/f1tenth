@@ -9,8 +9,11 @@ class MinimalSubscriber(Node):
       self.subscription = self.create_subscription(String, 'topic', self.listener_callback, 10)
       self.subscription  # prevent unused variable warning
 
-   def listener_callback(self, msg):
-      self.get_logger().info('I heard: "%s"' % msg.data)
+   def listener_callback(self, msg_v, msg_d):
+
+      v = int(msg_v.data.split()[2])
+      d = int(msg_d.data.split()[2])
+      self.get_logger().info('I heard: v=%s, d=%s' % (v, d))
    
 def main(args=None):
    rclpy.init(args=args)
@@ -22,4 +25,3 @@ def main(args=None):
 
 if __name__ == '__main__':
    main()
-   

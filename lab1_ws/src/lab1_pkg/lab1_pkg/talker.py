@@ -12,11 +12,16 @@ class MinimalPublisher(Node):
       self.i = 0
 
    def timer_callback(self):
-      msg = String()
-      msg.data = 'Hello World: %d' % self.i
-      self.publisher_.publish(msg)
-      self.get_logger().info('Publishing: "%s"' % msg.data)
-      self.i += 1
+      v = 1
+      d = 1
+
+      msg_v = String()
+      msg_d = String()
+      msg_v.data = f'Value v: {v}'  # Set the string data
+      msg_d.data = f'Value d: {d}'  # Set the string data
+      self.publisher_.publish(msg_d)
+      self.publisher_.publish(msg_v)
+      self.get_logger().info(f'Publishing: "{msg_v.data}", "{msg_d.data}"')
       
 def main(args=None):
    rclpy.init(args=args)
