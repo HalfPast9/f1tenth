@@ -1,19 +1,25 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from ackermann_msgs.msg import AckermannDriveStamped
+
 
 class MinimalSubscriber(Node):
 
    def __init__(self):
       super().__init__('minimal_subscriber')
-      self.subscription = self.create_subscription(String, 'topic', self.listener_callback, 10)
+      self.subscription = self.create_subscription(AckermannDriveStamped, 'drive', self.listener_callback, 10)
       self.subscription  # prevent unused variable warning
 
-   def listener_callback(self, msg_v, msg_d):
+      self.publisher_ = self.create_publisher(AckermannDriveStamped, 'drive_relay', 10)
 
-      v = int(msg_v.data.split()[2])
-      d = int(msg_d.data.split()[2])
-      self.get_logger().info('I heard: v=%s, d=%s' % (v, d))
+   def listener_callback(self, msg):
+      relay_msg = AckermannDriveStamped()
+      relay_msg.drive.speed = msg.drive.speed * 3
+      relay_msg.drive.steering_angle = msg.drive.steering_angle * 3
+
+      self.publisher_.publish(relay_msg)
+
+      self.get_logger().info('Relaying: v=%s, d=%s' % (relay_msg.drive.speed, relay_msg.drive.steering_angle))
    
 def main(args=None):
    rclpy.init(args=args)

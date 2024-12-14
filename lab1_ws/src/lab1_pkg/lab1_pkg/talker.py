@@ -1,27 +1,27 @@
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from ackermann_msgs.msg import AckermannDriveStamped
+
 
 class MinimalPublisher(Node):
 
    def __init__(self):
       super().__init__('minimal_publisher')
-      self.publisher_ = self.create_publisher(String, 'topic', 10)
-      timer_period = 0.5  # seconds
+      self.publisher_ = self.create_publisher(AckermannDriveStamped, 'drive', 10)
+      self.declare_parameter('v', 1.0)
+      self.declare_parameter('d', 1.0)
+      timer_period = 0  # seconds
       self.timer = self.create_timer(timer_period, self.timer_callback)
-      self.i = 0
 
    def timer_callback(self):
-      v = 1
-      d = 1
+      msg = AckermannDriveStamped()
+      msg.drive.speed = self.get_parameter('v').get_parameter_value().double_value
+      msg.drive.steering_angle = self.get_parameter('d').get_parameter_value().double_value
 
-      msg_v = String()
-      msg_d = String()
-      msg_v.data = f'Value v: {v}'  # Set the string data
-      msg_d.data = f'Value d: {d}'  # Set the string data
-      self.publisher_.publish(msg_d)
-      self.publisher_.publish(msg_v)
-      self.get_logger().info(f'Publishing: "{msg_v.data}", "{msg_d.data}"')
+      self.publisher_.publish(msg)
+
+      self.get_logger().info('Publishing: v=%s, d=%s' % (msg.drive.speed, msg.drive.steering_angle))
+      
       
 def main(args=None):
    rclpy.init(args=args)
