@@ -2,6 +2,8 @@
 
 my progress on getting a self-driving racecar. currently have follow the gap algorithm working
 ![image](https://github.com/user-attachments/assets/b6fa893e-c610-4470-a3dc-f48434152799)
+
+
 currently working on implementing active pathplanning algorithms like pure pursuit.
 
 
