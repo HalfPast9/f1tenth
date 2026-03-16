@@ -1,12 +1,3 @@
-# f1tenth
-
-## my progress on getting a self-driving racecar. currently have follow the gap algorithm working
-![image](https://github.com/user-attachments/assets/b6fa893e-c610-4470-a3dc-f48434152799)
-![Video Project 1](https://github.com/user-attachments/assets/a6bfec68-8449-4505-9452-04eea3d396c4)
-
-## currently working on implementing active pathplanning algorithms like pure pursuit.
-
-
 
 to run:
 
