@@ -18,6 +18,20 @@ colcon build
 ros2 launch lab1_pkg mylaunch.py
 
 
+
+Simple day-to-day flow:
+
+1. **Start everything** — `docker compose up` from `f1tenth_gym_ros` dir on host
+2. **Shell in** — `docker exec -it f1tenth_gym_ros-sim-1 /bin/bash` in a terminal
+3. **Launch sim when testing** — `source /opt/ros/foxy/setup.bash && source install/local_setup.bash && ros2 launch f1tenth_gym_ros gym_bridge_launch.py`
+4. **Edit code** on host in your editor, changes reflect in container instantly
+5. **Build in container** — `cd /lab2_ws && colcon build`
+6. **Run your node** in a second `docker exec` terminal
+7. **When done** — `docker compose down` to shut everything off cleanly (avoids the zombie process issue)
+
+The browser at `http://localhost:8080/vnc.html` is just for watching RViz. Everything else happens in your terminals.
+
+
 consider downloading rqt_graph, u can visualise the ocnnections to make sure they work the way they were coded.
 
 TO INSTALL RQT_GRAPH:
