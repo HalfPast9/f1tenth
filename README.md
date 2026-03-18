@@ -32,6 +32,17 @@ Simple day-to-day flow:
 The browser at `http://localhost:8080/vnc.html` is just for watching RViz. Everything else happens in your terminals.
 
 
+
+Host — mkdir -p ~/clonedrepos/f1tenth/lab3_ws/src/<package_name>
+docker-compose.yml — add the mount: - /home/shvempat/clonedrepos/f1tenth/lab3_ws/src/<package_name>:/sim_ws/src/<package_name>
+then rebuild container
+cd /tmp
+ros2 pkg create --build-type ament_python test_node
+cp -r /tmp/test_node/. /sim_ws/src/test_node/
+
+
+
+
 consider downloading rqt_graph, u can visualise the ocnnections to make sure they work the way they were coded.
 
 TO INSTALL RQT_GRAPH:
