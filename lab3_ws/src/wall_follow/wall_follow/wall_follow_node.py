@@ -19,8 +19,8 @@ class WallFollow(Node):
         self.subscription = self.create_subscription(LaserScan,'/scan', self.scan_callback, 10)
         self.publisher = self.create_publisher(AckermannDriveStamped, '/drive', 10)
         
-        self.kp = 1.0
-        self.kd = 0.01
+        self.kp = 3.0
+        self.kd = 0.75
         self.ki = 0.0  # leave at 0 until P+D is working
         self.integral = 0.0
         self.prev_error = 0.0
@@ -29,9 +29,9 @@ class WallFollow(Node):
         # TODO: store any necessary values you think you'll need
 
         self.perp_angle = np.radians(90)
-        self.chosen_angle = np.radians(45)
+        self.chosen_angle = np.radians(65)
         self.theta = self.perp_angle - self.chosen_angle
-        self.lookahead_dist = 0.75
+        self.lookahead_dist = 1
         self.prev_time = 0.0
         self.angle = 0.0
 
@@ -74,6 +74,9 @@ class WallFollow(Node):
         range_at_90 = self.get_range(range_data, self.perp_angle) # b
         range_at_45 = self.get_range(range_data, self.chosen_angle) # a
 
+        range_at_90 = min(range_at_90, 3.0)
+        range_at_45 = min(range_at_45, 3.0)
+
         if range_at_90 < 0 or range_at_45 < 0:
             return 0.0
 
@@ -82,7 +85,7 @@ class WallFollow(Node):
         Dt = range_at_90 * np.cos(ego_pose)
         Dt_future = Dt + self.lookahead_dist * np.sin(ego_pose)
 
-        future_error = dist - Dt_future
+        future_error = Dt_future - dist
 
 
         return future_error
@@ -128,16 +131,16 @@ class WallFollow(Node):
         """
         self.angle_min = msg.angle_min
         self.angle_increment = msg.angle_increment
-        self.desired_distance = 0.5 # TODO: tune this value
+        self.desired_distance = 1.0 # TODO: tune this value
 
         error = self.get_error(msg.ranges, self.desired_distance) # TODO: replace with error calculated by get_error()
         
         if abs(self.angle) < np.radians(10):
-            velocity = 1.5
+            velocity = 3.0
         elif abs(self.angle) < np.radians(20):
-            velocity = 1.0
+            velocity = 1.5
         else:
-            velocity = 0.5
+            velocity = 0.75
         
         self.pid_control(error, velocity) # TODO: actuate the car with PID
         
